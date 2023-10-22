@@ -7,7 +7,7 @@
 void database_init(void) {
 	database_exec(
 		"CREATE TABLE IF NOT EXISTS users"
-		"('id' INTEGER NOT NULL, 'username' TEXT NOT NULL, 'password' TEXT NOT NULL, 'question' TEXT NOT NULL, 'answer' TEXT NOT NULL,"
+		"('id' INTEGER NOT NULL, 'username' TEXT NOT NULL, 'password' TEXT NOT NULL, 'question' TEXT NOT NULL, 'answer' TEXT NOT NULL, 'token' TEXT,"
 		"PRIMARY KEY('id' AUTOINCREMENT))");
 }
 

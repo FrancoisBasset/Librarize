@@ -1,29 +1,9 @@
-#include <stdio.h>
 #include <sqlite3.h>
-#include <bsd/md5.h>
 #include <stdlib.h>
-#include <string.h>
 #include "headers/database.h"
 #include "headers/fixtures.h"
 #include "headers/user.h"
-
-char* hash(char *text) {
-    unsigned char digest[MD5_DIGEST_LENGTH];
-    MD5_CTX mdContext;
-
-	MD5Init(&mdContext);
-    MD5Update(&mdContext, (unsigned char*) text, strlen(text));
-    MD5Final(digest, &mdContext);
-
-	char *result = malloc(sizeof(char) * 33);
-	strcpy(result, "");
-
-    for(int i = 0; i < MD5_DIGEST_LENGTH; i++) {
-        sprintf(result,"%s%02x", result, digest[i]);
-    }
-    
-	return result;
-}
+#include "headers/utils.h"
 
 void fixtures_run(void) {
 	int length = 0;
