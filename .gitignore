@@ -1,0 +1,6 @@
+.cache
+.vscode
+api
+build
+compile_commands.json
+librarize.db
