@@ -1,4 +1,5 @@
 #ifndef DATABASE_H
+#define DATABASE_H
 #include <sqlite3.h>
 void database_init(void);
 int database_exec(const char *sql);

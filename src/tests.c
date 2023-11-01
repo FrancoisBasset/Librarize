@@ -1,8 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "lib/headers/database.h"
 #include "lib/headers/fixtures.h"
 #include "lib/headers/user.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "api/user.h"
+
+FILE *tmp_stdin = NULL;
+
+void write_to_stdin(char* data);
 
 int main(void) {
 	database_init();
@@ -32,5 +38,21 @@ int main(void) {
 		free(user2_bis.token);
 	}
 
+	write_to_stdin("username=Tournesol&password=ebb5298432585cb17be4033613f35a59&question=Où%20est%20mon%20whisky%20&answer=9f3cdabd069f68a2c2b7f46e91e02519");
+	setenv("CONTENT_LENGTH", "134", 1);
+	user_api_post(tmp_stdin);
+
+	fclose(tmp_stdin);
+
 	return 0;
+}
+
+void write_to_stdin(char* data) {
+    char *dup_data = strdup(data);
+
+	tmp_stdin = tmpfile();
+    fwrite(dup_data, 1, strlen(dup_data), tmp_stdin);
+    rewind(tmp_stdin);
+
+	free(dup_data);
 }

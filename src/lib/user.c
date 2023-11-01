@@ -40,6 +40,13 @@ user_t user_select_from_sql(char *sql) {
 	return user;
 }
 
+user_t user_select_with_username(const char *username) {
+	char *sql = malloc(sizeof(char) * (47 + strlen(username)));
+	sprintf(sql, "SELECT username FROM users WHERE username = '%s'", username);
+
+	return user_select_from_sql(sql);
+}
+
 user_t user_select_with_password(const char *username, const char *password) {
 	char *sql = malloc(sizeof(char) * (65 + strlen(username) + strlen(password)));
 	sprintf(sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s'", username, password);
