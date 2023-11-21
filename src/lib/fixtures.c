@@ -10,28 +10,22 @@ void fixtures_run(void) {
 	sqlite3_value ***results = database_select("SELECT COUNT(*) from users", &length);
 
 	if (sqlite3_value_int(results[0][0]) == 0) {
-		char *hash1 = hash("jaimeenqueter");
-		char *hash2 = hash("Le trésor");
-		char *hash3 = hash("unbelos");
-		char *hash4 = hash("Dans le jardin");
-		char *hash5 = hash("millesabords");
-		char *hash6 = hash("Il est caché");
-		char *hash7 = hash("ahjeris");
-		char *hash8 = hash("Dans la boite");
+		char *texts[4][4] = {
+			{ "Tintin", "jaimeenqueter", "Quelle nouvelle aventure palpitante mattend ?", "Le trésor" },
+			{ "Milou", "unbelos", "Où est passé mon os préféré ?", "Dans le jardin" },
+			{ "Haddock", "millesabords", "Où est mon whisky ?", "Il est caché" },
+			{ "Castafiore", "ahjeris", "Où sont mes bijoux ?", "Dans la boite" },
+		};
 
-		user_insert("Tintin", hash1, "Quelle nouvelle aventure palpitante mattend ?", hash2);
-		user_insert("Milou", hash3, "Où est passé mon os préféré ?", hash4);
-		user_insert("Haddock", hash5, "Où est mon whisky ?", hash6);
-		user_insert("Castafiore", hash7, "Où sont mes bijoux ?", hash8);
+		for (int i = 0; i < 4; i++) {
+			char *hashed_password = hash(texts[i][1]);
+			char *hashed_answer = hash(texts[i][3]);
 
-		free(hash1);
-		free(hash2);
-		free(hash3);
-		free(hash4);
-		free(hash5);
-		free(hash6);
-		free(hash7);
-		free(hash8);
+			user_insert(texts[i][0], hashed_password, texts[i][2], hashed_answer);
+
+			free(hashed_password);
+			free(hashed_answer);
+		}
 	}
 
 	sqlite3_value_free(results[0][0]);

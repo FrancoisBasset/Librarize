@@ -7,14 +7,14 @@
 #include "../lib/headers/database.h"
 #include "../lib/headers/user.h"
 
-void user_api_get(void) {
+void user_api_get(FILE *file) {
 	const int length = atoi(getenv("CONTENT_LENGTH")) + 1;
 
 	char *login_type = malloc(sizeof(char) * length);
 	char *username = malloc(sizeof(char) * length);
 	char *secret = malloc(sizeof(char) * length);
 	
-	fscanf(stdin, "login_type=%255[^&]&username=%255[^&]&secret=%255s", login_type, username, secret);
+	fscanf(file, "login_type=%255[^&]&username=%255[^&]&secret=%255s", login_type, username, secret);
 
 	user_t user;
 
@@ -25,7 +25,7 @@ void user_api_get(void) {
 	}
 
 	if (user.username) {
-		printf("Content-Type: appliction/json\n\n");
+		printf("Content-Type: application/json\n\n");
 		printf(
 			"{"
 			"\"username\": \"%s\","
@@ -35,6 +35,11 @@ void user_api_get(void) {
 	} else {
 		printf("Status: 404\n\n");
 	}
+
+	free(login_type);
+	free(username);
+	free(secret);
+	user_free(user);
 }
 
 void user_api_post(FILE *file) {
@@ -63,4 +68,35 @@ void user_api_post(FILE *file) {
 	free(password);
 	free(question);
 	free(answer);
+}
+
+void user_api_put(FILE *file) {
+	const int length = atoi(getenv("CONTENT_LENGTH")) + 1;
+
+	char *username = malloc(sizeof(char) * length);
+	char *token = malloc(sizeof(char) * length);
+	char *new_password = malloc(sizeof(char) * length);
+
+	fscanf(file, "username=%255[^&]&token=%255[^&]&new_password=%255s", username, token, new_password);
+
+	user_t existing_user = user_select_with_token(username, token);
+	if (existing_user.username != NULL) {
+		printf("Content-Type: application/json\n\n");
+		printf("{"
+			"\"username\": \"%s\","
+			"\"token\": \"%s\""
+			"}", existing_user.username, existing_user.token);
+
+		user_update_password(username, new_password);
+		free(existing_user.username);
+		free(existing_user.password);
+		free(existing_user.answer);
+		free(existing_user.token);
+	} else {
+		printf("Status: 401\n\n");
+	}
+
+	free(username);
+	free(token);
+	free(new_password);
 }

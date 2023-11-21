@@ -79,3 +79,19 @@ void user_insert(const char *username, const char *password, const char *questio
 
 	free(sql);
 }
+
+void user_update_password(const char *username, const char *new_password) {
+	char *sql = malloc(sizeof(char) * (51 + strlen(new_password) + strlen(username)));
+	sprintf(sql, "UPDATE users SET password = '%s' WHERE username = '%s'", new_password, username);
+
+	database_exec(sql);
+	free(sql);
+}
+
+void user_free(user_t user) {
+	free(user.username);
+	free(user.password);
+	free(user.question);
+	free(user.answer);
+	free(user.token);
+}

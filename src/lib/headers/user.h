@@ -14,4 +14,6 @@ user_t user_select_with_username(const char *username);
 user_t user_select_with_password(const char *username, const char *password);
 user_t user_select_with_answer(const char *username, const char *answer);
 user_t user_select_with_token(const char *username, const char *token);
+void user_update_password(const char *username, const char *new_password);
+void user_free(user_t user);
 #endif
