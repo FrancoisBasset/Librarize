@@ -9,8 +9,8 @@
 
 FILE *tmp_stdin = NULL;
 
-void write_to_stdin(char* data);
-void test_method(char *method, char *request);
+void write_to_stdin(const char* data);
+void test_method(const char *method, const char *request);
 
 int main(void) {
 	database_init();
@@ -23,15 +23,13 @@ int main(void) {
 		{ "Castafiore", "ahjeris", "Où sont mes bijoux ?", "Dans la boite" },
 	};
 
-	user_t user, user_bis, user_ter;
-
 	for (int i = 0; i < 4; i++) {
 		char *hashed_password = hash(texts[i][1]);
 		char *hashed_answer = hash(texts[i][3]);
 
-		user = user_select_with_password(texts[i][0], hashed_password);
-		user_bis = user_select_with_answer(user.username, hashed_answer);
-		user_ter = user_select_with_token(user_bis.username, user_bis.token);
+		user_t user = user_select_with_password(texts[i][0], hashed_password);
+		user_t user_bis = user_select_with_answer(user.username, hashed_answer);
+		user_t user_ter = user_select_with_token(user_bis.username, user_bis.token);
 
 		printf("%i => %s|%s|%s|%s\n", i + 1, user.username, hashed_password, hashed_answer, user.token);
 		printf("%i => %s|%s\n", i + 1, user_bis.username, user_bis.token);
@@ -73,7 +71,7 @@ int main(void) {
 	return 0;
 }
 
-void write_to_stdin(char* data) {
+void write_to_stdin(const char* data) {
     char *dup_data = strdup(data);
 
 	tmp_stdin = tmpfile();
@@ -83,7 +81,7 @@ void write_to_stdin(char* data) {
 	free(dup_data);
 }
 
-void test_method(char *method, char *request) {
+void test_method(const char *method, const char *request) {
 	char length[3];
 	sprintf(length, "%d", (int) strlen(request));
 
